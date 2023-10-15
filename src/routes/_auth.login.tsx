@@ -1,26 +1,27 @@
 import { useLoaderData } from "react-router-dom";
 
-type User = {
-  status: boolean;
-  message: string;
-  data: {
-    id: number;
-    name: string;
-    email: string;
-    email_verified_at: null;
-    token: string;
-  };
-  pagination: string | null;
-  error: string | null;
-};
+// type User = {
+//   status: boolean;
+//   message: string;
+//   data: {
+//     id: number;
+//     name: string;
+//     email: string;
+//     email_verified_at: null;
+//     token: string;
+//   };
+//   pagination: string | null;
+//   error: string | null;
+// };
 
 export async function loader() {
-  const response = await fetch("https://test.employee.tokoweb.xyz/api/login", {
-    headers: { "Content-Type": "application/json" },
+  const response = await fetch("https://dummyjson.com/auth/login", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      email: "admin@gmail.com",
-      password: "admin",
+      username: "kminchelle",
+      password: "0lelplR",
+      // expiresInMins: 60, // optional
     }),
   });
 
@@ -28,18 +29,16 @@ export async function loader() {
     throw new Error("Network response was not ok");
   }
 
-  const userData = (await response.json()) as User;
-  const token = userData.data.token;
+  const data = await response.json();
+  console.log(data);
 
-  localStorage.setItem("token", token);
+  localStorage.setItem("token", data.token);
 
-  return { userData };
+  return { userData: null };
 }
 
 export default function Login() {
   const { userData } = useLoaderData() as Awaited<ReturnType<typeof loader>>;
-
-  console.log({ userData });
 
   if (!userData) {
     return <p>Sorry, no user yet</p>;
